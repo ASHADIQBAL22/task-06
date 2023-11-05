@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OLMS - Online Library Management System</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f3f3f3;
+      display: flex;
+      justify-content: space-around;
+    }
+    .library {
+      display: flex;
+      flex-direction: row;
+      width: 80%;
+      margin: 0 auto;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    .book-list {
+      flex: 1;
+      padding: 20px;
+      border-right: 1px solid #ccc;
+      background-color: #0056b3;
+    }
+    .add-book {
+      flex: 1;
+      padding: 20px;
+      border-right: 1px solid #ccc;
+    }
+    .search {
+      flex: 1;
+      padding: 20px;
+      background-color: #0056b3;
+    }
+    .book-list h2, .add-book h2, .search h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #007BFF;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="library">
+    <div class="book-list">
+      <h2>Book List</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+          </tr>
+        </thead>
+        <tbody id="book-list">
+          <!-- Book list will be populated here -->
+        </tbody>
+      </table>
+    </div>
+    <div class="add-book">
+      <h2>Add New Book</h2>
+      <input type="text" id="title" placeholder="Title">
+      <input type="text" id="author" placeholder="Author">
+      <button onclick="addBook()">Add Book</button>
+    </div>
+    <div class="search">
+      <h2>Search for Books</h2>
+      <input type="text" id="search-input" placeholder="Search...">
+      <button onclick="searchBooks()">Search</button>
+    </div>
+  </div>
+
+  <script>
+    const books = [];
+
+    function addBook() {
+      const title = document.getElementById("title").value;
+      const author = document.getElementById("author").value;
+
+      if (title && author) {
+        const duplicateBook = books.find((book) => book.title === title);
+        if (!duplicateBook) {
+          books.push({ title, author });
+          renderBookList();
+          document.getElementById("title").value = "";
+          document.getElementById("author").value = "";
+        } else {
+          alert("Book already exists in the library.");
+        }
+      }
+    }
+
+    function searchBooks() {
+      const searchText = document.getElementById("search-input").value.toLowerCase();
+      const filteredBooks = books.filter(
+        (book) =>
+          book.title.toLowerCase().includes(searchText) ||
+          book.author.toLowerCase().includes(searchText)
+      );
+      renderBookList(filteredBooks);
+    }
+
+    function renderBookList(booksToDisplay = books) {
+      const bookList = document.getElementById("book-list");
+      bookList.innerHTML = "";
+      booksToDisplay.forEach((book) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${book.title}</td><td>${book.author}</td>`;
+        bookList.appendChild(row);
+      });
+    }
+
+    // Initial render
+    renderBookList();
+  </script>
+</body>
+</html>
